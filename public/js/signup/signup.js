@@ -10,8 +10,16 @@ app.config(function($stateProvider) {
 })
 
 // add necessary dependencies here
-app.controller('SignupCtrl', function($scope) {
+app.controller('SignupCtrl', function($scope, $state, User) {
 
+  $scope.sendSignup = function(ngModel){
+    //Username and password field
+    return User.create(ngModel)
+    .then(function(user){
+      $state.go('create', {id: user._id} )
+    })
+
+  }
 
   /*
   TODOS: 
