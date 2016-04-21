@@ -16,7 +16,7 @@ app.controller('SignupCtrl', function($scope, $state, User) {
     //Username and password field
     return User.create(ngModel)
     .then(function(user){
-      $state.go('create', {id: user._id} )
+      $state.go('create', {userId: user._id} )
     })
 
   }

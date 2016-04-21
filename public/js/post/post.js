@@ -5,29 +5,36 @@ app.config(function($stateProvider) {
 		url: '/post/:postId',
 		templateUrl: 'js/post/post.html',
 		controller: 'PostCtrl', 
-		/*
-				add a resolve block that retrieves all the users
-				so that the author field of the posts will be automatically 
-				populated
-		*/
+		resolve: {
+			users: function(User){
+				return User.filter();
+			} 
+		}
 	})
 });
 
 // add necessary dependencies 
-app.controller('PostCtrl', function() {
+app.controller('PostCtrl', function($scope, $stateParams, Post, User, users) {
 
+	//To-do: Implement caching
+	Post.find($stateParams.postId)
+	.then(function(post){
+		$scope.post = post;
+		User.find(post.author)
+		.then(function(author){
+			$scope.user = author;
+		})
+	})
 
-	/* 1. FIND POST
-		use state params to retrieve the post id and attach post object to scope 
-		on controller load 
-	*/
+	$scope.editMode = false;
+	$scope.edit = function(body){
+		if($scope.editMode){
+			var newPost = {
+				title: $scope.post.title,
+				author: $scope.user
+			};
+		}
 
-
-	/*
-		2. EDIT POST 
-		create a function that edits the post, adds an alert that the post has been 
-		successfully edited, and displays the edited post.  
-
-	*/
-
+		$scope.editMode = !$scope.editMode;
+	}
 })
